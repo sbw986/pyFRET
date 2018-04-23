@@ -2,7 +2,17 @@ import math
 import numpy as np
 import scipy
 
-def pyFRET_VBEM(x, mix, priorPar, options):
+class Out:
+    def __init__(self, Wa, Wpi, beta, m, W, v, F):
+        self.Wa = Wa
+        self.Wpi = Wpi
+        self.beta = beta
+        self.m = m
+        self.W = W
+        self.v = v
+        self.F = F
+
+def pyFRET_VBEM(x, mix, prior_par, options):
     """
     :type x:
     :type mix:
@@ -12,43 +22,49 @@ def pyFRET_VBEM(x, mix, priorPar, options):
     """
 
     # Initialize variables
-    D, T = x.shape
-    K = mix.ncentres
+    if len(x.shape) > 1:
+        D, T = x.shape
+    else:
+        T = x.shape[0]
+        D = 1
+
+    K = mix.n_components #mix.ncentres #SBW edit
     Fold = -1 * math.inf
     logLambdaTilde = np.zeros([1, K])
     trW0invW = np.zeros([1, K])
-    lnZ = np.zeros([1, options.maxIter])
-    Fa = np.zeros([1, options.maxIter])
-    Fpi = np.zeros([1, options.maxIter])
-    Fgw = np.zeros([1, options.maxIter])
-    F = np.zeros([1, options.maxIter])
+    lnZ = np.zeros([1, options.max_iter])
+    Fa = np.zeros([1, options.max_iter])
+    Fpi = np.zeros([1, options.max_iter])
+    Fgw = np.zeros([1, options.max_iter])
+    F = np.zeros([1, options.max_iter])
 
     # Hyperparameter priors
-    upi = PriorPar.upi
+    upi = prior_par.upi
     upi_vec = upi * np.ones([1,K])
-    ua = PriorPar.ua
-    uad = PriorPar.uad
+    ua = prior_par.ua
+    uad = prior_par.uad
     ua_mtx = ua + uad * np.eye(K)
-    m0 = PriorPar.mu
-    beta0 = PriorPar.beta0
-    W0 = PriorPar.W
-    v0 = PriorPar.v
+    m0 = prior_par.mu
+    beta0 = prior_par.beta
+    W0 = prior_par.W
+    v0 = prior_par.v
     W0inv = np.linalg.inv(W0)
 
     # Use 'responsibilities' from initialization to set sufficient statistics
-    Nk = T * np.conj(mix.priors)
-    xbar = np.conj(mix.centres)
-    S = mix.covars
+    Nk = T * np.conj(mix.means_prior_) #T * np.conj(mix.priors) # SBW Edit
+    xbar = np.conj(mix.means_) #np.conj(mix.centres) #SBW Edit
+    S = mix.covariances_ #mix.covars #SBW Edit
 
     # Use above sufficient statistics for M step update equations
     beta = beta0 + Nk
     v = v0 + Nk
     m = ((beta0 * m0) * np.ones([1,K]) + np.ones([D, 1]) * np.conj(Nk) * xbar) / (np.ones([D,1]) * np.conj(beta))
     W = np.zeros([D,D] * K)
-    for k in range(1, K + 1):
-        mult11 = beta0 * Nk(k) / (beta0 + Nk(k))
+    print('Nk', Nk)
+    for k in range(0, K):
+        mult1 = beta0 * Nk[k] / (beta0 + Nk[k])
         diff3 = xbar[:][k] - m0
-        W[:][:][k] = np.linalg.inv(w0inv + Nk(k) * S[:][:][k] + \
+        W[:][:][k] = np.linalg.inv(W0inv + Nk[k] * S[:][:][k] + \
                      mult1 * diff3 * np.conj(diff3))
     Wpi = np.conj(Nk)/T + upi
 
@@ -61,7 +77,7 @@ def pyFRET_VBEM(x, mix, priorPar, options):
     #Pre-calculate constant term used in lower bound estimation
     logB0 = -1 * (v0 / 2) * np.log(np.linalg.det(W0)) - (v0 * D / 2) * log(2) \
             - (D * (D - 1) / 4) * np.log(pi) - \
-            np.sum(scipy.special.gammaln(0.5 * (v0 + 1 - (range(1:D + 1)))))
+            np.sum(scipy.special.gammaln(0.5 * (v0 + 1 - (range(1,D + 1)))))
 
     # Main loop of algorithm
     for iterv in range(1, options.maxIter + 1):
@@ -70,7 +86,7 @@ def pyFRET_VBEM(x, mix, priorPar, options):
         pistar = np.exp(scipy.special.digamma(Wpi) - \
                         scipy.special.digamma(np.sum(Wpi, 2)))
         for k in range(1, K + 1):
-            logLambdaTilde(k) = np.sum(scipy.special.digamma((v[k] * np.ones([1,D]) \
+            logLambdaTilde[k] = np.sum(scipy.special.digamma((v[k] * np.ones([1,D]) \
                                        + 1 - range(1, D + 1)) / 2 )) + D * np.log(2) \
                                        + np.log(np.linalg.det(W[:][:][k]))
 
@@ -147,12 +163,6 @@ def pyFRET_VBEM(x, mix, priorPar, options):
                 F[iterv + 1::] = []
                 break
 
-    out.Wa = Wa
-    out.Wpi = Wpi
-    out.beta = beta
-    out.m = m
-    out.W = W
-    out.v = v
-    out.F = F
+    out = Out(Wa, Wpi, beta, m, W, v, F)
 
     return out

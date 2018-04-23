@@ -11,3 +11,6 @@ verify_ssl = true
 
 [packages]
 
+numpy = "*"
+sklearn = "*"
+scipy = "*"
