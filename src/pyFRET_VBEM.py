@@ -135,7 +135,7 @@ def pyFRET_VBEM(x, mix, prior_par, options):
                 xWm = xWm + np.rot90([x1],3) * W12 * m2
                 mWm = mWm + (m1 * W12 * m2)
 
-        pdb.set_trace()
+
 
         E = np.matmul((xWx - 2 * xWm + np.ones([T,1]) * mWm), np.diag(v)) + \
             np.matmul(np.ones([T,1]), ([D/beta]))
@@ -145,6 +145,7 @@ def pyFRET_VBEM(x, mix, prior_par, options):
 
         #Forward-back algorithm
         #TODO Start from here for testunit debugging
+        pdb.set_trace()
         wa, wpi, xbar, S, Nk, lnZ[iterv] = forwbackFRET.forwbackFRET(astar, pXgivenZtilde, pistar, x) # TODO write forwbackFRET fun
 
         #Compute F

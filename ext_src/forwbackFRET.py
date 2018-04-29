@@ -42,20 +42,18 @@ def forwbackFRET(A, px_z, pz, data):
 
     #Backward pass (with scaling)
     beta[T-1,:] = np.ones([K])/scale[T-1]
-    for t in range(T-1, 0, -1):
-        beta[t,:] = np.matmul((beta[t,:] * px_z[t,:]), np.rot90(A)) / scale[t]
-
-
+    for t in range(T-2, -1, -1):
+        beta[t,:] = np.matmul((beta[t+1,:] * px_z[t+1,:]), np.rot90(A)) / scale[t]
 
     #Another pass gives us the joint probabilities
     for t in range(1, T):
         Xi = Xi + A * (np.rot90([alpha[t,:]]) * beta[t,:] * px_z[t,:])
-
+    pdb.set_trace()
     #Compute Gamma
     Gamma = alpha * beta
     Gamma = Gamma / np.rot90(np.matlib.repmat(np.sum(Gamma,1), K, 1))
 
-    GammaInit = GammaInit + Gamma[1,:]
+    GammaInit = GammaInit + Gamma[0,:]
     lnZv = np.sum(np.log(scale))
 
     Nk = Nk + np.sum(Gamma, 0)
