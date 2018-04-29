@@ -1,7 +1,6 @@
 import numpy as np
 
 def dirrnd(pu, n = None):
-    print(pu.shape, len(pu))
     s = pu.shape[0]
     #if len(pu.shape) == 2:
 #        s = pu.shape[1]
@@ -18,7 +17,6 @@ def dirrnd(pu, n = None):
 
     samples = np.random.gamma(pu)
     #TODO sum is missing dimensionality factor
-    samples = samples / (np.sum(samples) * np.ones((1,s)))
+    samples = samples / (np.sum(samples) * np.ones(s))
 
-    print('samples ', samples)
     return samples

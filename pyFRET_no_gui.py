@@ -1,6 +1,7 @@
 import numpy as np
 import src.get_mix as get_mix
 import src.pyFRET_VBEM as pyFRET_VBEM
+import pdb
 
 class Priors:
     def __init__(self, D):
@@ -22,7 +23,7 @@ class RunParams:
         :type kmin: Int, min num of states to try
         :type K: Int, max num of states to try
         :type I: Int, max num of restarts
-        :type D: List[List[floats]], raw data
+        :type data: List[List[floats]], raw data
         """
         self.D = D
         self.kmin = kmin
@@ -49,7 +50,7 @@ def main(run_params, prior_params, vb_options, data):
     best_idx = np.zeros([run_params.N, run_params.K])
 
     for n in range(0, run_params.N):
-        fret = data[n][:]
+        fret = data[n]
         for k in range(run_params.kmin, run_params.K + 1):
             ncentres = k
             init_mu = (np.conj(range(0, ncentres)))/(ncentres + 1)
@@ -76,9 +77,9 @@ def main(run_params, prior_params, vb_options, data):
 if __name__ == '__main__':
 
     D = 1
-    x = np.array([[0, 1, 0, 0, 1, 0, 0]])
+    x = np.array([[1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0]])
 
-    run_pars = RunParams(D, 2, 5, 10, x)
+    run_pars = RunParams(D, 2, 2, 10, x)
     prior_pars = Priors(D)
     vb_opts = VBopts(100, 1e-5, False, False, False, False)
 
