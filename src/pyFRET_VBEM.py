@@ -91,6 +91,10 @@ def pyFRET_VBEM(x, mix, prior_par, options):
 
     for k in range(0, K):
         wa[k,:] = dirrnd.dirrnd(ua_mtx[k,:], 1) * (T - 1) / K # TODO write dirrnd function
+
+    #TODO remove wa define for debugging
+    wa = np.array([[6.4714, 2.0286], [0.1137, 8.3863]])
+    pdb.set_trace()
     Wa = wa + ua_mtx
 
 
@@ -135,8 +139,6 @@ def pyFRET_VBEM(x, mix, prior_par, options):
                 xWm = xWm + np.rot90([x1],3) * W12 * m2
                 mWm = mWm + (m1 * W12 * m2)
 
-
-
         E = np.matmul((xWx - 2 * xWm + np.ones([T,1]) * mWm), np.diag(v)) + \
             np.matmul(np.ones([T,1]), ([D/beta]))
 
@@ -145,18 +147,22 @@ def pyFRET_VBEM(x, mix, prior_par, options):
 
         #Forward-back algorithm
         #TODO Start from here for testunit debugging
-        pdb.set_trace()
+
         wa, wpi, xbar, S, Nk, lnZ[iterv] = forwbackFRET.forwbackFRET(astar, pXgivenZtilde, pistar, x) # TODO write forwbackFRET fun
 
         #Compute F
         H = 0
+
         for k in range(0, K):
             logBk = -(v[k]/2) * np.log(np.linalg.det(W[:,:,k])) - \
                     (v[k] * D / 2) * np.log(2) - (D * (D - 1) / 2) * np.log(np.pi) - \
                     np.sum(scipy.special.gammaln(0.5 * (v[k] + 1 - (range(1, D+1)))))
-            Hd = H - logBk - 0.5 * (v[k] - D - 1) * logLambdaTilde[k] + 0.5 * v[k] * D
+            H = H - logBk - 0.5 * (v[k] - D - 1) * logLambdaTilde[k] + 0.5 * v[k] * D
             diff = m[:,k] - m0
-            trW0invW[k] = np.trace(W0inv*W[:,:,k])
+            mWm[0][k] = np.matmul(np.matmul(np.transpose(diff), W[:,:,k]), diff)
+            trW0invW[k] = np.trace(np.matmul(W0inv,W[:,:,k]))
+
+        pdb.set_trace()
 
         Lt41 = 0.5 * np.sum(D * np.log(beta0 / (2 * np.pi)) + np.rot90([logLambdaTilde]) - \
                             D * beta0 / beta - beta0 * v * np.rot90([mWm]))

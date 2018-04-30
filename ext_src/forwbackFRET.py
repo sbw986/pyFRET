@@ -43,15 +43,15 @@ def forwbackFRET(A, px_z, pz, data):
     #Backward pass (with scaling)
     beta[T-1,:] = np.ones([K])/scale[T-1]
     for t in range(T-2, -1, -1):
-        beta[t,:] = np.matmul((beta[t+1,:] * px_z[t+1,:]), np.rot90(A)) / scale[t]
+        beta[t,:] = np.matmul((beta[t+1,:] * px_z[t+1,:]), np.transpose(A)) / scale[t]
 
     #Another pass gives us the joint probabilities
-    for t in range(1, T):
-        Xi = Xi + A * (np.rot90([alpha[t,:]]) * beta[t,:] * px_z[t,:])
-    pdb.set_trace()
+    for t in range(T-1):
+        Xi = Xi + A * (np.matmul(np.rot90([alpha[t,:]],3), [beta[t+1,:] * px_z[t+1,:]]))
+
     #Compute Gamma
     Gamma = alpha * beta
-    Gamma = Gamma / np.rot90(np.matlib.repmat(np.sum(Gamma,1), K, 1))
+    Gamma = Gamma / np.transpose(np.matlib.repmat(np.sum(Gamma,1), K, 1))
 
     GammaInit = GammaInit + Gamma[0,:]
     lnZv = np.sum(np.log(scale))
@@ -70,7 +70,7 @@ def forwbackFRET(A, px_z, pz, data):
     for k in range(0, K):
         diff1 = data - np.matlib.repmat(xbar[:,k], 1, T)
         diff2 = np.matlib.repmat(np.conj(Gamma[:,k]), D, 1) * diff1
-        S[:,:,k] = S[:,:,k] + np.matmul(diff2, np.rot90(diff1))
+        S[:,:,k] = S[:,:,k] + np.matmul(diff2, np.transpose(diff1))
 
     Nk3d = np.zeros([D, D, K])
 
