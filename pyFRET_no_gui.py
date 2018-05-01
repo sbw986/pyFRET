@@ -45,13 +45,13 @@ class VBopts:
 
 # Parameter settings
 def main(run_params, prior_params, vb_options, data):
-    bestOut = [[[] for _ in range(run_params.N)] for _ in range(run_params.K)]
-    outF = -1 * np.inf * np.ones([run_params.N, run_params.K])
-    best_idx = np.zeros([run_params.N, run_params.K])
+    bestOut = [[[] for _ in range(run_params.K + 1)] for _ in range(run_params.N)]
+    outF = -1 * np.inf * np.ones([run_params.N, run_params.K + 1])
+    best_idx = np.zeros([run_params.N, run_params.K + 1])
 
     for n in range(0, run_params.N):
         fret = data[n]
-        for k in range(run_params.kmin, run_params.K + 1):
+        for k in range(run_params.kmin, run_params.K+1):
             ncentres = k
             init_mu = (np.conj(range(0, ncentres)))/(ncentres + 1)
             i = 1
@@ -64,11 +64,11 @@ def main(run_params, prior_params, vb_options, data):
                 mix = get_mix.get_gmm_mix(fret, init_mu)
                 out = pyFRET_VBEM.pyFRET_VBEM(fret, mix, prior_params, vb_options)
 
-                if out.F > maxLP:
-                    maxLP = out.F
-                    bestMix[n][k] = mix
+                if out.F[-1] > maxLP:
+                    maxLP = out.F[-1]
+                    #bestMix[n][k] = mix
                     bestOut[n][k] = out
-                    outF[n][k] = out.F
+                    outF[n][k] = out.F[-1]
                     best_idx[n][k] = i
 
                 i += 1

@@ -84,7 +84,7 @@ def pyFRET_VBEM(x, mix, prior_par, options):
         # TODO S is being indexed differently
         W[:,:,k] = np.linalg.inv(W0inv + Nk[k] * S[:,:,k] + \
                      mult1 * diff3 * np.rot90([diff3]))
-    Wpi = np.rot90([Nk])/T + upi
+    Wpi = Nk/T + upi
 
     # Initialize transition matrix using random values drawn from Dirichlet
     wa = np.zeros([K,K])
@@ -196,11 +196,11 @@ def pyFRET_VBEM(x, mix, prior_par, options):
 
         if iterv > 2:
             if abs((F[iterv] - F[iterv - 1])/F[iterv - 1]) < options.threshold: # TODO isfinite needs to be added
-                lnZ[iterv + 1::] = []
-                Fa[iterv + 1::] = []
-                Fpi[iterv + 1::] = []
-                Fgw[iterv + 1::] = []
-                F[iterv + 1::] = []
+                lnZ = lnZ[0:iterv]
+                Fa = Fa[0:iterv]
+                Fpi = Fpi[0:iterv]
+                Fgw = Fgw[0:iterv]
+                F = F[0:iterv]
                 break
 
     out = Out(Wa, Wpi, beta, m, W, v, F)
