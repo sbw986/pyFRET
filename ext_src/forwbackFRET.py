@@ -29,7 +29,7 @@ def forwbackFRET(A, px_z, pz, data):
     scale = np.zeros([T])
 
     #Forward pass (with scaling)
-
+    pdb.set_trace()
     alpha[0,:] = np.rot90(pz) * px_z[0,:]
     scale[0] = np.sum(alpha[0,:])
     alpha[0,:] = alpha[0,:]/scale[0]

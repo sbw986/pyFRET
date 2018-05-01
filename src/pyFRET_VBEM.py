@@ -67,7 +67,7 @@ def pyFRET_VBEM(x, mix, prior_par, options):
 
     #TODO remove this stuff that was placed for debugging
     Nk = np.array([9, 9])
-    xbar = np.array([.3726, .6274])
+    xbar = np.array([.6274, .3726])
     S = np.array([[[.2338, .2338]]])
 
     # Use above sufficient statistics for M step update equations
@@ -93,8 +93,7 @@ def pyFRET_VBEM(x, mix, prior_par, options):
         wa[k,:] = dirrnd.dirrnd(ua_mtx[k,:], 1) * (T - 1) / K # TODO write dirrnd function
 
     #TODO remove wa define for debugging
-    wa = np.array([[6.4714, 2.0286], [0.1137, 8.3863]])
-    pdb.set_trace()
+    wa = np.array([[2.4199, 6.0801], [7.9353, 0.5647]])
     Wa = wa + ua_mtx
 
 
@@ -162,21 +161,22 @@ def pyFRET_VBEM(x, mix, prior_par, options):
             mWm[0][k] = np.matmul(np.matmul(np.transpose(diff), W[:,:,k]), diff)
             trW0invW[k] = np.trace(np.matmul(W0inv,W[:,:,k]))
 
-        pdb.set_trace()
 
-        Lt41 = 0.5 * np.sum(D * np.log(beta0 / (2 * np.pi)) + np.rot90([logLambdaTilde]) - \
-                            D * beta0 / beta - beta0 * v * np.rot90([mWm]))
+
+        Lt41 = 0.5 * np.sum(D * np.log(beta0 / (2 * np.pi)) + logLambdaTilde - \
+                            D * beta0 / beta - beta0 * v * mWm)
         Lt42 = K * logB0 + 0.5 * (v0 - D - 1) * np.sum(logLambdaTilde) - \
-               - 0.5 * np.sum(v * np.rot90([trW0invW]))
+               0.5 * np.sum(v * trW0invW)
         Lt4 = Lt41 + Lt42
-        Lt7 = 0.5 * np.sum(np.rot90([logLambdaTilde]) + D * np.log(beta/(2 * np.pi))) \
-              -0.5 * D * K - H
+        Lt7 = 0.5 * np.sum(logLambdaTilde + D * np.log(beta/(2 * np.pi))) - \
+              0.5 * D * K - H
         Fgw[iterv] = Lt4 - Lt7
         for kk in range(0, K):
             uad_vec = np.zeros([K])
             uad_vec[kk] = uad
             Fa[iterv] = Fa[iterv] - kldirichlet.kldirichlet(Wa[kk,:], ua_mtx[kk,:]) # TODO write kldirichlet function
-        Fpi[iterv] = - kldirichlet.kldirichlet(Wpi, upi_vec)
+
+        Fpi[iterv] = - kldirichlet.kldirichlet(np.transpose(Wpi)[0], upi_vec)
         F[iterv] = Fa[iterv] + Fgw[iterv] + Fpi[iterv] + lnZ[iterv]
         if iterv > 2 and (F[iterv] < F[iterv - 1] - .000001):
             print('Warning!!: Lower bound decreased')
@@ -184,8 +184,8 @@ def pyFRET_VBEM(x, mix, prior_par, options):
         #M Step
         beta = beta0 + Nk
         v = v0 + Nk
-        m = ((beta0 * m0) * np.ones([1,K]) + \
-             np.ones([D,1]) * np.rot90([Nk]) * xbar) / (np.ones([D, 1]) * np.rot90([beta]))
+        m = ((beta0 * m0) * np.ones(K) + \
+             np.ones([D]) * Nk * xbar) / (np.ones([D]) * beta)
         for k in range(0, K):
             mult1 = beta0 * Nk[k] / (beta0 + Nk[k])
             diff3 = xbar[:,k] - m0
