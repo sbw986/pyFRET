@@ -67,7 +67,7 @@ def pyFRET_VBEM(x, mix, prior_par, options):
 
     #TODO remove this stuff that was placed for debugging
     Nk = np.array([9, 9])
-    xbar = np.array([.6274, .3726])
+    xbar = np.array([.3726, 0.6274])
     S = np.array([[[.2338, .2338]]])
 
     # Use above sufficient statistics for M step update equations
@@ -93,7 +93,7 @@ def pyFRET_VBEM(x, mix, prior_par, options):
         wa[k,:] = dirrnd.dirrnd(ua_mtx[k,:], 1) * (T - 1) / K # TODO write dirrnd function
 
     #TODO remove wa define for debugging
-    wa = np.array([[2.4199, 6.0801], [7.9353, 0.5647]])
+    wa = np.array([[8.0577, 0.4423], [4.1899, 4.3101]])
     Wa = wa + ua_mtx
 
 
@@ -105,7 +105,7 @@ def pyFRET_VBEM(x, mix, prior_par, options):
     # Main loop of algorithm
     for iterv in range(0, options.max_iter):
         astar = np.exp(scipy.special.digamma(Wa) - \
-                        scipy.special.digamma(np.sum(Wa, axis = 1)) * np.ones([1,K]))
+                        np.matmul(np.transpose([scipy.special.digamma(np.sum(Wa, axis = 1))]),[np.ones([K])]))
         pistar = np.exp(scipy.special.digamma(Wpi) - \
                         scipy.special.digamma(np.sum(Wpi, axis = 0)))
 
@@ -176,7 +176,7 @@ def pyFRET_VBEM(x, mix, prior_par, options):
             uad_vec[kk] = uad
             Fa[iterv] = Fa[iterv] - kldirichlet.kldirichlet(Wa[kk,:], ua_mtx[kk,:]) # TODO write kldirichlet function
 
-        Fpi[iterv] = - kldirichlet.kldirichlet(np.transpose(Wpi)[0], upi_vec)
+        Fpi[iterv] = - kldirichlet.kldirichlet(Wpi, upi_vec)
         F[iterv] = Fa[iterv] + Fgw[iterv] + Fpi[iterv] + lnZ[iterv]
         if iterv > 2 and (F[iterv] < F[iterv - 1] - .000001):
             print('Warning!!: Lower bound decreased')
