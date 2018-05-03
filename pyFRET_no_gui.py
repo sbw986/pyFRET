@@ -1,6 +1,7 @@
 import numpy as np
 import src.get_mix as get_mix
 import src.pyFRET_VBEM as pyFRET_VBEM
+import src.chmmViterbi as chmmViterbi
 import pdb
 
 class Priors:
@@ -72,6 +73,13 @@ def main(run_params, prior_params, vb_options, data):
                     best_idx[n][k] = i
 
                 i += 1
+
+        z_hat = [[[] for _ in range(run_params.K)] for _ in range(run_params.N)]
+        x_hat = [[[] for _ in range(run_params.K)] for _ in range(run_params.N)]
+
+        for n in range(run_params.N):
+            for k in range(run_params.kmin, run_params.K + 1):
+                z_hat[n][k], x_hat[n][k] = chmmViterbi.chmmViterbi(bestOut[n][k], data[n])
 
 
 if __name__ == '__main__':

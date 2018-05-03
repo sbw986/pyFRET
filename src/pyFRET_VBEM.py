@@ -67,7 +67,7 @@ def pyFRET_VBEM(x, mix, prior_par, options):
 
     #TODO remove this stuff that was placed for debugging
     Nk = np.array([9, 9])
-    xbar = np.array([.3726, 0.6274])
+    xbar = np.array([.6274, 0.3726])
     S = np.array([[[.2338, .2338]]])
 
     # Use above sufficient statistics for M step update equations
@@ -93,7 +93,7 @@ def pyFRET_VBEM(x, mix, prior_par, options):
         wa[k,:] = dirrnd.dirrnd(ua_mtx[k,:], 1) * (T - 1) / K # TODO write dirrnd function
 
     #TODO remove wa define for debugging
-    wa = np.array([[8.0577, 0.4423], [4.1899, 4.3101]])
+    wa = np.array([[6.0158, 2.4842], [1.6071, 6.8929]])
     Wa = wa + ua_mtx
 
 
@@ -196,11 +196,11 @@ def pyFRET_VBEM(x, mix, prior_par, options):
 
         if iterv > 2:
             if abs((F[iterv] - F[iterv - 1])/F[iterv - 1]) < options.threshold: # TODO isfinite needs to be added
-                lnZ = lnZ[0:iterv]
-                Fa = Fa[0:iterv]
-                Fpi = Fpi[0:iterv]
-                Fgw = Fgw[0:iterv]
-                F = F[0:iterv]
+                lnZ = lnZ[0:iterv + 1]
+                Fa = Fa[0:iterv + 1]
+                Fpi = Fpi[0:iterv + 1]
+                Fgw = Fgw[0:iterv + 1]
+                F = F[0:iterv + 1]
                 break
 
     out = Out(Wa, Wpi, beta, m, W, v, F)
