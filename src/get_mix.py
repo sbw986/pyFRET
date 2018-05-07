@@ -1,5 +1,10 @@
 from sklearn import mixture
 import numpy as np
+import sys
+sys.path.append('/Users/Steven/PycharmProjects/pyFRET/ext_src')
+from gmm import gmm
+from vbfret_gmminit import gmminit
+import pdb
 
 def get_gmm_mix(x, start_guess):
     """
@@ -24,9 +29,14 @@ def get_gmm_mix(x, start_guess):
     # TODO making a bunch of assumptions here... Removing lots of other functions for now
 
     if D == 1:
-        mix = mixture.BayesianGaussianMixture(n_components = ncentres, covariance_type = 'spherical')
+        mix = gmm(D, ncentres, 'spherical')
     else:
-        mix = mixture.BayesianGaussianMixture(n_components = ncentres, covariance_type = 'full')
-    mix.fit(np.rot90([x]))
+        mix = gmm(D, ncentres, 'full')
+
+    #Set mix.centres to starting guess
+    mix.centres = start_guess
+
+    #initialize with hard K-means algorithm
+    mix = gmminit(mix, x, options)
 
     return mix

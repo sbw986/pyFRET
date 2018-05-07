@@ -14,3 +14,4 @@ verify_ssl = true
 numpy = "*"
 sklearn = "*"
 scipy = "*"
+ppca = "*"

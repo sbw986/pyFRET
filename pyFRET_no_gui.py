@@ -54,7 +54,7 @@ def main(run_params, prior_params, vb_options, data):
         fret = data[n]
         for k in range(run_params.kmin, run_params.K+1):
             ncentres = k
-            init_mu = (np.conj(range(0, ncentres)))/(ncentres + 1)
+            init_mu = (np.arange(1, ncentres+1))/(ncentres + 1)
             i = 1
             maxLP = -1 * np.inf
             while i < run_params.I + 1:
