@@ -3,7 +3,6 @@ from dist2 import dist2
 import pdb
 
 def kmeans(centres, data, options):
-    pdb.set_trace()
     if len(data.shape) == 1:
         ndata = len(data)
         data_dim = 1
@@ -25,7 +24,12 @@ def kmeans(centres, data, options):
         perm = np.random.permutation(ndata)
         perm = perm[0:ncentres]
 
-        centres = data[perm, :]
+        centres = data[perm]
+
+    #TODO Remove these values used for debugging
+    perm = np.array([7,4])
+    centres = np.array([0.0, 1.0])
+
 
     id_ = np.eye(ncentres)
 
@@ -38,15 +42,14 @@ def kmeans(centres, data, options):
         post = id_[index,:]
 
         num_points = np.sum(post, axis = 0)
-        pdb.set_trace()
         for j in range(0, ncentres):
             if num_points[j] > 0:
                 centres[j] = np.sum(data[np.where(post[:,j] != 0)])/num_points[j]
 
         e = np.sum(minvals)
 
-        if n > 1:
-            if np.max(np.max(np.abs(centres - old_centres))) < options[1] and np.abs(old_e - e) < options[2]:
+        if n > 0:
+            if np.max(np.abs(centres - old_centres)) < options[1] and np.abs(old_e - e) < options[2]:
                 options[7] = e
                 return centres, options, post
         old_e = e

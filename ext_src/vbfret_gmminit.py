@@ -2,6 +2,8 @@
 from sklearn.decomposition import PCA
 from kmeans import kmeans
 import pdb
+import numpy as np
+from dist2 import dist2
 
 def gmminit(mix, x, options):
     if len(x.shape) == 1:
@@ -15,14 +17,14 @@ def gmminit(mix, x, options):
     #TODO need to write kmeans
     mix.centres, options, post = kmeans(mix.centres, x, options)
 
-    cluster_sizes = np.max(np.sum(post, 0), 1)
+    cluster_sizes = np.sum(post, 0)
     mix.priors = cluster_sizes / np.sum(cluster_sizes)
 
     if mix.covar_type == 'spherical':
         if mix.ncentres > 1:
             cdist = dist2(mix.centres, mix.centres)
-            cdist = cdist + np.diag(np.ones(mix.centres) * np.finfo('d').max)
-            mix.covars = np.min(cdist)
+            cdist = cdist + np.diag(np.ones(mix.ncentres) * np.finfo('d').max)
+            mix.covars = np.min(cdist, 0) #TODO Should this be 1?
             mix.covars = mix.covars + GMM_WIDTH * (mix.covars < np.finfo(float).eps)
         else:
             mix.covars = np.mean(np.diag(np.cov(x)))

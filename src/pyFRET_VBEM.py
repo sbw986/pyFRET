@@ -36,7 +36,7 @@ def pyFRET_VBEM(x, mix, prior_par, options):
         T = x.shape[0]
         D = 1
 
-    K = mix.n_components #mix.ncentres #SBW edit
+    K = mix.ncentres #mix.ncentres #SBW edit
     Fold = -1 * math.inf
     logLambdaTilde = np.zeros([K])
     trW0invW = np.zeros([K])
@@ -61,14 +61,14 @@ def pyFRET_VBEM(x, mix, prior_par, options):
     # Use 'responsibilities' from initialization to set sufficient statistics
     #Nk = T * np.conj(mix.mean_prior_) #T * np.conj(mix.priors) # SBW Edit
     #TODO Fix means_prior_ in Nk
-    Nk = T * np.rot90(mix.means_)[0]
-    xbar = np.rot90(mix.means_)[0] #np.conj(mix.centres) #SBW Edit
-    S = mix.covariances_ #mix.covars #SBW Edit
+    Nk = T * mix.priors
+    xbar = mix.centres #np.conj(mix.centres) #SBW Edit
+    S = mix.covars #mix.covars #SBW Edit
 
     #TODO remove this stuff that was placed for debugging
-    Nk = np.array([9, 9])
-    xbar = np.array([.6274, 0.3726])
-    S = np.array([[[.2338, .2338]]])
+    #Nk = np.array([9, 9])
+    #xbar = np.array([.6274, 0.3726])
+    #S = np.array([[[.2338, .2338]]])
 
     # Use above sufficient statistics for M step update equations
 

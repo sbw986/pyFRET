@@ -1,4 +1,6 @@
 import numpy as np
+import pdb
+from dist2 import dist2
 
 def gmmactiv(mix, x):
 
@@ -10,7 +12,7 @@ def gmmactiv(mix, x):
         #TODO add dist2 function
         n2 = dist2(x, mix.centres)
 
-        wi2 = np.matmul(np.ones(ndata), (2 * mix.covars))
+        wi2 = np.ones([ndata,1]) * (2 * mix.covars)
         normal = (np.pi * wi2)**(mix.nin/2)
         a = np.exp(-1 * (n2 / wi2)) / normal
 
@@ -23,7 +25,7 @@ def gmmactiv(mix, x):
 
     elif mix.covar_type == 'full':
         normal = (2 * np.pi) ** (mix.nin/2)
-        for j in range 0:mix.ncentres:
+        for j in range(0,mix.ncentres):
             diffs = x - np.matmul(np.ones(ndata), mix.centres[j,:])
             c = np.linalg.cholesky(mix.covars[:,:,j])
             temp = diffs/c
@@ -36,7 +38,7 @@ def gmmactiv(mix, x):
         for i in range(0, ncentres):
             k = 1 - mix.covars[i] / mix.lambda_[i,:]
             logZ[i] = log_normal + mix.nin * np.log(mix.covars[i]) - np.sum(np.log(1-k))
-            diffs = np.matmul(np.ones(ndata), mix.centres(i,:))
+            diffs = np.matmul(np.ones(ndata), mix.centres[i,:])
             proj = np.matmul(diffs, mix.U[:, :, i])
             d2[:, i] = (np.sum(diffs * diffs, 2)) - \
                         np.sum((proj * np.matmul(np.ones(ndata), k)), 2) / mix.covars[i]

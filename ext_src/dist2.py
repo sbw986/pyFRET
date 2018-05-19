@@ -22,7 +22,7 @@ def dist2(x, c):
          np.ones([ndata,1]) * (c ** 2) - 2 * np.transpose([x]) * c
 
     #TODO This is going to have problems.  Translation not good.
-    if n2.any().any() < 0:
-        n2 = [ival if ival >= 0 else 0 for ival in n2]
+    if (n2 < 0).any():
+        n2[n2 < 0] = 0
 
     return n2

@@ -46,9 +46,9 @@ class VBopts:
 
 # Parameter settings
 def main(run_params, prior_params, vb_options, data):
-    bestOut = [[[] for _ in range(run_params.K + 1)] for _ in range(run_params.N)]
-    outF = -1 * np.inf * np.ones([run_params.N, run_params.K + 1])
-    best_idx = np.zeros([run_params.N, run_params.K + 1])
+    bestOut = [[[] for _ in range(run_params.K)] for _ in range(run_params.N)]
+    outF = -1 * np.inf * np.ones([run_params.N, run_params.K])
+    best_idx = np.zeros([run_params.N, run_params.K])
 
     for n in range(0, run_params.N):
         fret = data[n]
@@ -68,19 +68,18 @@ def main(run_params, prior_params, vb_options, data):
                 if out.F[-1] > maxLP:
                     maxLP = out.F[-1]
                     #bestMix[n][k] = mix
-                    bestOut[n][k] = out
-                    outF[n][k] = out.F[-1]
-                    best_idx[n][k] = i
+                    bestOut[n][k-1] = out
+                    outF[n][k-1] = out.F[-1]
+                    best_idx[n][k-1] = i
 
                 i += 1
 
         z_hat = [[[] for _ in range(run_params.K)] for _ in range(run_params.N)]
         x_hat = [[[] for _ in range(run_params.K)] for _ in range(run_params.N)]
-
         for n in range(run_params.N):
             for k in range(run_params.kmin, run_params.K + 1):
-                z_hat[n][k], x_hat[n][k] = chmmViterbi.chmmViterbi(bestOut[n][k], data[n])
-
+                z_hat[n][k-1], x_hat[n][k-1] = chmmViterbi.chmmViterbi(bestOut[n][k-1], data[n])
+        pdb.set_trace()
 
 if __name__ == '__main__':
 
