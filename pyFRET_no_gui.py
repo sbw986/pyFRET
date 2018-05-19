@@ -42,8 +42,6 @@ class VBopts:
         self.display_iter = display_iter
         self.display_iters_to_converg = display_iters_to_converg
 
-
-
 # Parameter settings
 def main(run_params, prior_params, vb_options, data):
     bestOut = [[[] for _ in range(run_params.K)] for _ in range(run_params.N)]
@@ -73,20 +71,21 @@ def main(run_params, prior_params, vb_options, data):
                     best_idx[n][k-1] = i
 
                 i += 1
-
-        z_hat = [[[] for _ in range(run_params.K)] for _ in range(run_params.N)]
-        x_hat = [[[] for _ in range(run_params.K)] for _ in range(run_params.N)]
-        for n in range(run_params.N):
-            for k in range(run_params.kmin, run_params.K + 1):
-                z_hat[n][k-1], x_hat[n][k-1] = chmmViterbi.chmmViterbi(bestOut[n][k-1], data[n])
-        pdb.set_trace()
+    pdb.set_trace()
+    z_hat = [[[] for _ in range(run_params.K)] for _ in range(run_params.N)]
+    x_hat = [[[] for _ in range(run_params.K)] for _ in range(run_params.N)]
+    for n in range(run_params.N):
+        for k in range(run_params.kmin, run_params.K + 1):
+            x_hat[n][k-1], z_hat[n][k-1] = chmmViterbi.chmmViterbi(bestOut[n][k-1], data[n])
+    pdb.set_trace()
 
 if __name__ == '__main__':
 
     D = 1
-    x = np.array([[1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0]])
+    #x = np.array([[1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0]])
+    x = np.array([[1, 0, 0, 1, 0, 1, 2, 2, 1, 1, 0, 2, 1, 1, 0, 1, 1, 0]])
 
-    run_pars = RunParams(D, 2, 2, 10, x)
+    run_pars = RunParams(D, 3, 3, 10, x)
     prior_pars = Priors(D)
     vb_opts = VBopts(100, 1e-5, False, False, False, False)
 

@@ -40,8 +40,8 @@ def get_gmm_mix(x, start_guess):
     #initialize with hard K-means algorithm
     mix = gmminit(mix, x, options)
 
+
     #initialize with soft K-means algorithm
-    #TODO here i am on 5/11
     mix, options, errlog = gmmem(mix, x, options, 3)
 
     if D == 1:

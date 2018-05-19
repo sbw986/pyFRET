@@ -3,9 +3,9 @@ import numpy as np
 import scipy
 import sys
 sys.path.append('/Users/Steven/PycharmProjects/pyFRET/ext_src')
-import dirrnd as dirrnd
-import forwbackFRET as forwbackFRET
-import kldirichlet as kldirichlet
+from dirrnd import dirrnd
+from forwbackFRET import forwbackFRET
+from kldirichlet import kldirichlet
 import pdb
 
 class Out:
@@ -60,15 +60,9 @@ def pyFRET_VBEM(x, mix, prior_par, options):
 
     # Use 'responsibilities' from initialization to set sufficient statistics
     #Nk = T * np.conj(mix.mean_prior_) #T * np.conj(mix.priors) # SBW Edit
-    #TODO Fix means_prior_ in Nk
     Nk = T * mix.priors
     xbar = mix.centres #np.conj(mix.centres) #SBW Edit
     S = mix.covars #mix.covars #SBW Edit
-
-    #TODO remove this stuff that was placed for debugging
-    #Nk = np.array([9, 9])
-    #xbar = np.array([.6274, 0.3726])
-    #S = np.array([[[.2338, .2338]]])
 
     # Use above sufficient statistics for M step update equations
 
@@ -90,10 +84,8 @@ def pyFRET_VBEM(x, mix, prior_par, options):
     wa = np.zeros([K,K])
 
     for k in range(0, K):
-        wa[k,:] = dirrnd.dirrnd(ua_mtx[k,:], 1) * (T - 1) / K # TODO write dirrnd function
+        wa[k,:] = dirrnd(ua_mtx[k,:], 1) * (T - 1) / K
 
-    #TODO remove wa define for debugging
-    wa = np.array([[6.0158, 2.4842], [1.6071, 6.8929]])
     Wa = wa + ua_mtx
 
 
@@ -145,9 +137,7 @@ def pyFRET_VBEM(x, mix, prior_par, options):
                         np.exp(0.5 * (np.rot90(np.ones([1,T])) * logLambdaTilde - E))
 
         #Forward-back algorithm
-        #TODO Start from here for testunit debugging
-
-        wa, wpi, xbar, S, Nk, lnZ[iterv] = forwbackFRET.forwbackFRET(astar, pXgivenZtilde, pistar, x) # TODO write forwbackFRET fun
+        wa, wpi, xbar, S, Nk, lnZ[iterv] = forwbackFRET(astar, pXgivenZtilde, pistar, x)
 
         #Compute F
         H = 0
@@ -174,9 +164,9 @@ def pyFRET_VBEM(x, mix, prior_par, options):
         for kk in range(0, K):
             uad_vec = np.zeros([K])
             uad_vec[kk] = uad
-            Fa[iterv] = Fa[iterv] - kldirichlet.kldirichlet(Wa[kk,:], ua_mtx[kk,:]) # TODO write kldirichlet function
+            Fa[iterv] = Fa[iterv] - kldirichlet(Wa[kk,:], ua_mtx[kk,:])
 
-        Fpi[iterv] = - kldirichlet.kldirichlet(Wpi, upi_vec)
+        Fpi[iterv] = - kldirichlet(Wpi, upi_vec)
         F[iterv] = Fa[iterv] + Fgw[iterv] + Fpi[iterv] + lnZ[iterv]
         if iterv > 2 and (F[iterv] < F[iterv - 1] - .000001):
             print('Warning!!: Lower bound decreased')

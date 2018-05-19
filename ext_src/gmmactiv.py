@@ -9,7 +9,6 @@ def gmmactiv(mix, x):
     a = np.zeros([ndata, mix.ncentres])
 
     if mix.covar_type == 'spherical':
-        #TODO add dist2 function
         n2 = dist2(x, mix.centres)
 
         wi2 = np.ones([ndata,1]) * (2 * mix.covars)

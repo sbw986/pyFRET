@@ -5,7 +5,6 @@ from gmmactiv import gmmactiv
 def gmmpost(mix, x):
     ndata = len(x)
 
-    #TODO write gmmactiv
     a = gmmactiv(mix, x)
 
     post = np.ones([ndata,1]) * mix.priors * a

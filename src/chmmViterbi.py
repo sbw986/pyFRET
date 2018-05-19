@@ -13,7 +13,6 @@ def chmmViterbi(out, x):
     z_hat = np.zeros(T)
 
     # Get parameters from out structure
-    #TODO Add normalization function
     pZ0, _ = normalise.normalise(out.Wpi)
     A = out.Wa
 
@@ -27,7 +26,6 @@ def chmmViterbi(out, x):
         covarMtx[:,:,k] = np.linalg.inv(W[:,:,k])/(v[k] - D - 1)
     #Compute values for timestep 1
     for k in range(0,K):
-        #TODO add gaussian function
         omega[0,k] = np.log(pZ0[k]) + np.log(gauss.gauss(mus[:,k], covarMtx[:,:,k], x[0]))
 
     bestPriorZ[0,:] = 0

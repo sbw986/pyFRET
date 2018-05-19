@@ -13,11 +13,10 @@ def gmminit(mix, x, options):
         ndata, xdim = x.shape()
 
     GMM_WIDTH = 1.0
-
-    #TODO need to write kmeans
     mix.centres, options, post = kmeans(mix.centres, x, options)
 
     cluster_sizes = np.sum(post, 0)
+    cluster_sizes[cluster_sizes < 1] = 1 #TODO SBW addition for no prior zero, seems consistent with matlab but need to check
     mix.priors = cluster_sizes / np.sum(cluster_sizes)
 
     if mix.covar_type == 'spherical':

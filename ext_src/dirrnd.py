@@ -16,7 +16,6 @@ def dirrnd(pu, n = None):
             #return
 
     samples = np.random.gamma(pu)
-    #TODO sum is missing dimensionality factor
     samples = samples / (np.sum(samples) * np.ones(s))
 
     return samples

@@ -26,11 +26,6 @@ def kmeans(centres, data, options):
 
         centres = data[perm]
 
-    #TODO Remove these values used for debugging
-    perm = np.array([7,4])
-    centres = np.array([0.0, 1.0])
-
-
     id_ = np.eye(ncentres)
 
     for n in range(0,niters):

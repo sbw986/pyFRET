@@ -34,9 +34,7 @@ def gmm(dim, ncentres, covar_type, ppca_dim = None):
         mix.ppca_dim = ppca_dim
 
     mix.priors = np.ones([mix.ncentres]) / mix.ncentres
-    #TODO remove debugging value
-    #mix.centres = np.random.normal(mix.ncentres, mix.nin)
-    mix.centres = np.array([[0.7665],[1.7447]])
+    mix.centres = np.random.normal(mix.ncentres, mix.nin)
 
     if mix.covar_type == 'spherical':
         mix.covars = np.ones([mix.ncentres])
