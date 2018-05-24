@@ -1,5 +1,15 @@
-pyFRET is a python translate of the vbFRET software package.  Acknowledgements and copyright information can be found below.
-----------------------------------------------------------------------------------------------------------------------------
+pyFRET is a matlab-to-python translation of the vbFRET software package.  All code from the
+original work is translated and reproduced in accordance with the Los Alamos National
+Laboratory licence, reproduced below:  
+-----------------------------------------------------------------------------------------------------------------
+In accordance with vbFRET guidelines, this software is free for scientific use.  Please contact
+the original authors of the work if you plan to use this software for commercial purposes. do not further distribute without prior permission of the authors. if used in your scientific work, please cite as (bibtex):
+
+
+Learning Rates and States from Biophysical Time Series: A Bayesian Approach to Model Selection and Single-Molecule FRET Data, Jonathan E. Bronson, Jingyi Fei, Jake M. Hofman, Ruben L. Gonzalez Jr., Chris H. Wiggins. Biophysical Journal, 97(12):3196-205 (2009).
+
+
+---------------------------------------------------------------------------------------------------
 
 Parts of vbFRET were built on or borrow directly from the codes of others, including those of Matt Beal; Chris Bishop and Ian Nabney; and Emtiyaz Khan and Kevin Murphy.
 
