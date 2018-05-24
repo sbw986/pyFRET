@@ -1,3 +1,6 @@
+pyFRET is a python translate of the vbFRET software package.  Acknowledgements and copyright information can be found below.
+----------------------------------------------------------------------------------------------------------------------------
+
 Parts of vbFRET were built on or borrow directly from the codes of others, including those of Matt Beal; Chris Bishop and Ian Nabney; and Emtiyaz Khan and Kevin Murphy.
 
 The GUI was designed using tutorial code from the blinkdagger matlab blog (http://blinkdagger.com/).
