@@ -1,9 +1,9 @@
 vbpy is a matlab-to-python translation of the vbFRET software package.
 
-vbFRET was designed and distributed by Bronson et al.
+vbFRET was designed and released by Bronson et al.
 
 All code from the original work is translated and shared in accordance with the originally published licencing,
-reproduced below in conjuction with vbFRET acknwoledgements:
+reproduced below in conjunction with vbFRET acknowledgements:
 -----------------------------------------------------------------------------------------------------------------
 
 In accordance with vbFRET guidelines, this software is free for scientific use.  Please contact

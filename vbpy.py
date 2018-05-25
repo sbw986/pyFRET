@@ -42,7 +42,7 @@ class VBopts:
         self.display_iter = display_iter
         self.display_iters_to_converg = display_iters_to_converg
 
-class pyFRET:
+class pyvb:
     def __init__(self):
         D = 1
         self.run_params = RunParams(D, 2, 2, 10, x)
@@ -110,7 +110,7 @@ if __name__ == '__main__':
     x = np.array([[1.0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0]])
     for i, d in enumerate(x[0]):
         x[0, i] = d + np.random.normal(0, 0.1)
-    pf = pyFRET()
+    pf = pyvb()
     pf.fit(x)
     pf.predict()
     print(pf.z_hat)

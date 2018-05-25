@@ -25,8 +25,6 @@ def get_gmm_mix(x, start_guess):
     options[13] = 10
     options[4] = 1
 
-    # TODO making a bunch of assumptions here... Removing lots of other functions for now
-
     if D == 1:
         mix = gmm(D, ncentres, 'spherical')
     else:
