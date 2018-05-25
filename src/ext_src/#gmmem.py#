@@ -78,8 +78,7 @@ def gmmem(mix, x, options, nargout):
                 for j in range(0, mix.ncentres):
                     if np.min(np.linalg.svd(mix.covars[:,:,j])) < MIN_COVAR:
                         mix.covars[:,:,j] = init_covars[:,:,j]
-        else:
-            print('Unknown covariance type')
+        attempted relative import beyond top-level package
         # diag and ppca not tested.  May not be used
         """
         elif mix.covar_type == 'diag':
@@ -106,7 +105,6 @@ def gmmem(mix, x, options, nargout):
                 if mix.covars[j] < MIN_COVAR:
                     mix.covars[j] = init_covars[j]
         """
-
     options[7] = -1 * np.sum(np.log(gmmprob(mix,x)))
 
     if display >= 0:

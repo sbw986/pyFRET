@@ -14,14 +14,7 @@ def gmmactiv(mix, x):
         wi2 = np.ones([ndata,1]) * (2 * mix.covars)
         normal = (np.pi * wi2)**(mix.nin/2)
         a = np.exp(-1 * (n2 / wi2)) / normal
-
-    elif mix.covar_type == 'diag':
-        normal = (2 * np.pi)**(mix.nin/2)
-        s = np.prod(np.sqrt(mix.covars),1)
-        for j in range(0, mix.ncentres):
-            diffs = x - np.matmul(np.ones(ndata), mix.centres[j,:])
-            a[:,j] = np.exp(-0.5 * np.sum((diffs ** 2)/np.ones(ndata) * mix.covars[j,:], 2)/(normal * s[j]))
-
+    #TODO need to test full
     elif mix.covar_type == 'full':
         normal = (2 * np.pi) ** (mix.nin/2)
         for j in range(0,mix.ncentres):
@@ -29,6 +22,16 @@ def gmmactiv(mix, x):
             c = np.linalg.cholesky(mix.covars[:,:,j])
             temp = diffs/c
             a[:,j] = np.exp(-0.5 * np.sum(temp * temp, 1))/ (normal * np.prod(np.diag(c)))
+    else:
+        print('Unknown covariance type ')
+    # diag and ppca not tested.  May not be used
+    """
+    elif mix.covar_type == 'diag':
+        normal = (2 * np.pi)**(mix.nin/2)
+        s = np.prod(np.sqrt(mix.covars),1)
+        for j in range(0, mix.ncentres):
+            diffs = x - np.matmul(np.ones(ndata), mix.centres[j,:])
+            a[:,j] = np.exp(-0.5 * np.sum((diffs ** 2)/np.ones(ndata) * mix.covars[j,:], 2)/(normal * s[j]))
 
     elif mix.covar_type == 'ppca':
         log_normal = np.matmul(mix.nin, np.log(2*pi))
@@ -42,7 +45,6 @@ def gmmactiv(mix, x):
             d2[:, i] = (np.sum(diffs * diffs, 2)) - \
                         np.sum((proj * np.matmul(np.ones(ndata), k)), 2) / mix.covars[i]
         a = np.exp(-0.5 * (d2 + np.matmul(np.ones(ndata), logZ)))
-    else:
-        print('Unknown covariance type ')
+    """
 
     return a

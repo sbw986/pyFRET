@@ -39,13 +39,16 @@ def gmm(dim, ncentres, covar_type, ppca_dim = None):
     if mix.covar_type == 'spherical':
         mix.covars = np.ones([mix.ncentres])
         mix.nwts = mix.ncentres + mix.ncentres * mix.nin + mix.ncentres
-    elif mix.covar_type == 'diag':
-        mix.covars = np.ones([mix.ncentres, mix.nin])
-        mix.nwts = mix.ncentres + mix.ncentres * mix.nin + mix.ncentres * mix.nin
+    #TODO full not tested yet
     elif mix.covar_type == 'full':
         mix.covars = np.tile(np.eye(mix.nin), [1, 1, mix.ncentres])
         mix.nwts = mix.ncentres + mix.ncentres * mix.nin \
                    + mix.ncentres * mix.nin * mix.nin
+    # diag and ppca not tested.  May not be used.
+    """
+    elif mix.covar_type == 'diag':
+        mix.covars = np.ones([mix.ncentres, mix.nin])
+        mix.nwts = mix.ncentres + mix.ncentres * mix.nin + mix.ncentres * mix.nin
     elif mix.covar_type == 'ppca':
         mix.covars = 0.1 * np.ones([mix.ncentres])
         init_space = np.eye(mix.nin)
@@ -56,5 +59,5 @@ def gmm(dim, ncentres, covar_type, ppca_dim = None):
         mix.lambda_ = np.ones([mix.ncentres, mix.ppca_dim])
         mix.nwts = mix.ncentres + mix.ncentres * mix.nin + mix.ncentres + \
                    mix.ncentres * mix.ppca_dim + mix.ncentres * mix.nin * mix.ppca_dim
-
+    """
     return mix

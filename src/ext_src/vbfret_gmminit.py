@@ -27,6 +27,7 @@ def gmminit(mix, x, options):
             mix.covars = mix.covars + GMM_WIDTH * (mix.covars < np.finfo(float).eps)
         else:
             mix.covars = np.mean(np.diag(np.cov(x)))
+    #TODO full not tested yet
     elif mix.covar_type == 'full':
         for j in range(0, mix.ncentres):
             c = x[np.argwhere(post[:,j]), :]
@@ -34,6 +35,8 @@ def gmminit(mix, x, options):
             mix.covars[:, :, j] = np.matmul(np.transpose(diffs), diffs) / c.shape[0]
             if rank[mix.covars[:,:,j]] < mix.nin:
                 mix.covars[:,:,j] = mix.covars[:,:,j] + GMM_WIDTH * np.eye(mix.nin)
+    # ppca not tested.  May not be used
+    """
     elif mix.covar_type == 'ppca':
         for j in range(0, mix.ncentres):
             c = x[np.argwhere(post[:,j]), :]
@@ -53,5 +56,5 @@ def gmminit(mix, x, options):
                 mix.covars[j] = tempcovars
                 mix.U[:, :, j] = tempU
                 mix.lambda_[j, :] = templambda
-
+    """
     return mix
