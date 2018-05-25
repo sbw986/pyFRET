@@ -113,3 +113,5 @@ if __name__ == '__main__':
     pf = pyFRET()
     pf.fit(x)
     pf.predict()
+    print(pf.z_hat)
+    print(pf.x_hat)

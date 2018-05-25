@@ -2,7 +2,7 @@ import math
 import numpy as np
 import scipy
 import sys
-sys.path.append('/Users/Steven/PycharmProjects/pyFRET/ext_src')
+sys.path.append('../ext_src')
 from dirrnd import dirrnd
 from forwbackFRET import forwbackFRET
 from kldirichlet import kldirichlet

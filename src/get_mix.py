@@ -1,7 +1,7 @@
 from sklearn import mixture
 import numpy as np
 import sys
-sys.path.append('/Users/Steven/PycharmProjects/pyFRET/ext_src')
+sys.path.append('../ext_src')
 from gmm import gmm
 from vbfret_gmminit import gmminit
 from gmmem import gmmem
