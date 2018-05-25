@@ -1,9 +1,7 @@
 import numpy as np
 import sys
-#sys.path.append('/Users/Steven/PycharmProjects/pyFRET/ext_src')
-#sys.path.append('../ext_src')
-from normalise import normalise
-from gauss import gauss
+from .ext_src.normalise import normalise
+from .ext_src.gauss import gauss
 import pdb
 
 def chmmViterbi(out, x):

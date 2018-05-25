@@ -1,10 +1,8 @@
 from sklearn import mixture
 import numpy as np
-import sys
-sys.path.append('../ext_src')
-from gmm import gmm
-from vbfret_gmminit import gmminit
-from gmmem import gmmem
+from .ext_src.gmm import gmm
+from .ext_src.vbfret_gmminit import gmminit
+from .ext_src.gmmem import gmmem
 import pdb
 
 def get_gmm_mix(x, start_guess):

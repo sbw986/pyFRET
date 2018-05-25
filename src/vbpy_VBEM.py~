@@ -2,10 +2,9 @@ import math
 import numpy as np
 import scipy
 import sys
-sys.path.append('../ext_src')
-from dirrnd import dirrnd
-from forwbackFRET import forwbackFRET
-from kldirichlet import kldirichlet
+from .ext_src.dirrnd import dirrnd
+from .ext_src.forwbackFRET import forwbackFRET
+from .ext_src.kldirichlet import kldirichlet
 import pdb
 
 class Out:

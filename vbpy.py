@@ -1,7 +1,7 @@
 import numpy as np
-import src.get_mix as get_mix
-import src.pyFRET_VBEM as pyFRET_VBEM
-import src.chmmViterbi as chmmViterbi
+from src.get_mix import get_gmm_mix
+from src.vbpy_VBEM import vbpy_VBEM
+from src.chmmViterbi import chmmViterbi
 import pdb
 
 class Priors:
@@ -80,8 +80,8 @@ class pyFRET:
                         break
                     if i > 1:
                         init_mu = np.random.rand(ncentres, 1)
-                    mix = get_mix.get_gmm_mix(fret, init_mu)
-                    out = pyFRET_VBEM.pyFRET_VBEM(fret, mix, self.prior_params, self.vb_options)
+                    mix = get_gmm_mix(fret, init_mu)
+                    out = vbpy_VBEM(fret, mix, self.prior_params, self.vb_options)
 
                     if out.F[-1] > maxLP:
                         maxLP = out.F[-1]
@@ -101,7 +101,7 @@ class pyFRET:
         self.x_hat = [[[] for _ in range(self.run_params.K)] for _ in range(self.run_params.N)]
         for n in range(self.run_params.N):
             for k in range(self.run_params.kmin, self.run_params.K + 1):
-                self.x_hat[n][k-1], self.z_hat[n][k-1] = chmmViterbi.chmmViterbi(self.bestOut[n][k-1], transform_data[n])
+                self.x_hat[n][k-1], self.z_hat[n][k-1] = chmmViterbi(self.bestOut[n][k-1], transform_data[n])
 
 if __name__ == '__main__':
 
