@@ -25,9 +25,6 @@ def vbpy_VBEM(x, mix, prior_par, options):
     :type options:
     :rtype out
     """
-
-
-
     # Initialize variables
     if len(x.shape) > 1:
         D, T = x.shape
